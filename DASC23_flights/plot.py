@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import argparse
 
 from scipy.spatial.transform import Rotation
-from arena import ArenaMap
+from gflow.arena import ArenaMap
 import pyclipper
 
 
@@ -108,8 +108,8 @@ def plot_trajectory_2(timestamp, states, controls, building_hulls):
 
     for _v in range(states.shape[0]):
         # if _v != 2 : continue
-        k1 = 7300
-        k2 = 7800
+        # k1 = 7300
+        # k2 = 7800
         k1=0
         k2=len(timestamp[_v])
         time = timestamp[_v]

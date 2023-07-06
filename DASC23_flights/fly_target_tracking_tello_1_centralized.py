@@ -8,7 +8,6 @@ import numpy as np
 
 # from path_plan_w_panel import ArenaMap, Vehicle, Flow_Velocity_Calculation_0
 
-
 from gflow.arena import ArenaMap
 from gflow.panel_flow import Flow_Velocity_Calculation
 # from gflow.building import Building
@@ -34,7 +33,14 @@ def main():
     visualize = False#True
 
     #---------- OpTr- ACID - -----IP------
-    ac_list = [['65', '65', '192.168.1.65'],]
+    # ac_list = [['65', '65', '192.168.1.65'],]
+
+    ac_list =  [['65', '65', '192.168.1.65'],
+                ['66', '66', '192.168.1.66'],]
+
+    # ac_list =  [['65', '65', '192.168.1.65'],
+    #             ['66', '66', '192.168.1.66'],
+    #             ['67', '67', '192.168.1.67'] ]
 
     ip_list = [_[2] for _ in ac_list]
     swarm = TelloSwarm.fromIps(ip_list)
@@ -43,7 +49,7 @@ def main():
     for i,id in enumerate(id_list):
         swarm.tellos[i].set_ac_id(id)
 
-    case = Cases.get_case(filename='cases.json', casename='target_tracking_1_vehicle')
+    case = Cases.get_case(filename='cases.json', casename='target_tracking_2_vehicle')
 
     # arena_version = 65 #102
     # vehicle_name_list =   ['V1']
@@ -169,7 +175,7 @@ def main():
                         mag = np.linalg.norm(V_des)
                         V_des_unit = V_des/mag
                         V_des_unit[2] = 0.
-                        mag = np.clip(mag, 0., 0.5)
+                        mag = np.clip(mag, 0., 1.1)
                         vel_enu = V_des_unit*mag
                         # swarm.tellos[i].update(swarm.tellos, )
 
@@ -186,9 +192,10 @@ def main():
 
                         # and update the Nest Vinf:
                         vinfmag = 0.5
-                        vehicle.propagate_simple_path(vinfmag, vel_enu)
+                        vehicle.propagate_simple_path(vinfmag, V_des=vel_enu)
 
-                        swarm.tellos[i].send_velocity_enu(vehicle.velocity_desired, heading)
+                        # swarm.tellos[i].send_velocity_enu(vehicle.velocity_desired, heading)
+                        swarm.tellos[i].send_velocity_enu(vel_enu, heading)
                         TARGET_VELS[i]=vehicle.velocity_desired
 
                         # swarm.tellos[i].send_velocity_enu(vehicle.velocity_desired, heading)
