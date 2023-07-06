@@ -82,7 +82,7 @@ def plot_trajectory_2(timestamp, states, controls, building_hulls):
     for building in building_hulls:
         building_arr = np.array(building)
         safetyfac = 1.1
-        rad = 0.17
+        rad = 0.0 #0.17
         rad = rad * safetyfac
         scale = 1e6
         pco = pyclipper.PyclipperOffset()
@@ -97,8 +97,8 @@ def plot_trajectory_2(timestamp, states, controls, building_hulls):
         sorted_angles = sorted(zip(angles, points), reverse = True)
         points_sorted = np.vstack([x for y, x in sorted_angles])
         building_arr = points_sorted
-        plt.plot( np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'salmon', alpha=0.8 )
-        plt.fill( np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'salmon', alpha=0.8 )
+        # plt.plot( np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'salmon', alpha=0.8 )
+        # plt.fill( np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'salmon', alpha=0.8 )
 
     for building in building_hulls:
         building_arr = np.array(building)

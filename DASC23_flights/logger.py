@@ -43,6 +43,7 @@ class Logger(object):
         self.PREALLOCATED_ARRAYS = False if duration_sec == 0 else True
         self.counters = np.zeros(num_drones)
         self.timestamps = np.zeros((num_drones, duration_sec*self.LOGGING_FREQ_HZ))
+        self.building_hulls = np.zeros(3)
         #### Note: this is the suggest information to log ##############################
         self.states = np.zeros((num_drones, 20, duration_sec*self.LOGGING_FREQ_HZ)) #### 16 states: pos_x,
                                                                                                   # pos_y,
@@ -84,6 +85,9 @@ class Logger(object):
                 buildings_list.append( [[points[i][0], points[i][1], 3.0] for i in hull.vertices] )
         
         self.building_hulls = np.array(buildings_list)
+
+    def set_buildings(self,buildings):
+        self.building_hulls = np.array([building.vertices for building in buildings])
 
     def log(self,
             drone: int,
