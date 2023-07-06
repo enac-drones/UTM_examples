@@ -62,7 +62,7 @@ def main():
     #### Define and parse (optional) arguments for the script ##
     parser = argparse.ArgumentParser(description='Velocity control example using VelocityAviary')
     parser.add_argument('--drone',              default=['tello'],     type=str,    help='Drone model (default: CF2X)', metavar='', choices=DroneModel)
-    parser.add_argument('--gui',                default=False,        type=str2bool,      help='Whether to use PyBullet GUI (default: True)', metavar='')
+    parser.add_argument('--gui',                default=True,        type=str2bool,      help='Whether to use PyBullet GUI (default: True)', metavar='')
     parser.add_argument('--record_video',       default=False,       type=str2bool,      help='Whether to record a video (default: False)', metavar='')
     parser.add_argument('--plot',               default=True,        type=str2bool,      help='Whether to plot the simulation results (default: True)', metavar='')
     parser.add_argument('--user_debug_gui',     default=False,       type=str2bool,      help='Whether to add debug lines and parameters to the GUI (default: False)', metavar='')
@@ -163,9 +163,9 @@ def main():
 
     for i in range(0, int(ARGS.duration_sec*env.SIM_FREQ), AGGR_PHY_STEPS):
 
-        for index,vehicle in enumerate(case.Vehicle_list):
-            if vehicle.state != 1:
-                vehicle.run_simple_sim()
+        # for index,vehicle in enumerate(case.Vehicle_list):
+        #     if vehicle.state != 1:
+        #         vehicle.run_simple_sim()
 
     # i=0
     # while sim_finished != True:
@@ -207,7 +207,7 @@ def main():
                 V_des = vehicle.run_flow_calc_alone()
                 mag = np.linalg.norm(V_des)
                 V_des_unit = V_des/mag
-                V_des_unit[2] = 0. 
+                V_des_unit[2] = 0.
                 mag = np.clip(mag, 0., 0.4)
                 mag_converted = mag/8.3 # This is Tellos max speed 30Km/h
 
