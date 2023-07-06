@@ -35,7 +35,8 @@ from dronesim.envs.BaseAviary import DroneModel, Physics
 from dronesim.envs.VelocityAviary import VelocityAviary
 from dronesim.utils.utils import sync, str2bool
 
-from cases import Cases
+# from cases import Cases
+from gflow.cases import Cases
 
 # from gym_pybullet_drones.envs.BaseAviary import DroneModel, Physics
 # from gym_pybullet_drones.envs.CtrlAviary import CtrlAviary
@@ -61,7 +62,7 @@ from cases import Cases
 def main():
     #### Define and parse (optional) arguments for the script ##
     parser = argparse.ArgumentParser(description='Velocity control example using VelocityAviary')
-    parser.add_argument('--drone',              default=['tello'],     type=str,    help='Drone model (default: CF2X)', metavar='', choices=DroneModel)
+    parser.add_argument('--drone',              default=['robobee'],     type=str,    help='Drone model (default: CF2X)', metavar='', choices=DroneModel)
     parser.add_argument('--gui',                default=True,        type=str2bool,      help='Whether to use PyBullet GUI (default: True)', metavar='')
     parser.add_argument('--record_video',       default=False,       type=str2bool,      help='Whether to record a video (default: False)', metavar='')
     parser.add_argument('--plot',               default=True,        type=str2bool,      help='Whether to plot the simulation results (default: True)', metavar='')
@@ -112,11 +113,14 @@ def main():
     #     vehicle.Set_Position(pos)
         # pdb.set_trace()
 
-    case = Cases()
-    vehicle_list = case.Vehicle_list
+    # case = Cases()
+    # vehicle_list = case.Vehicle_list
     
+    case = Cases.get_case(filename='cases.json', casename='DASC23_case_1')
+    vehicle_list = case.vehicle_list
+
     # current_vehicle_list = vehicle_list
-    num_vehicles = len(case.Vehicle_list)
+    num_vehicles = len(vehicle_list)
 
     INIT_XYZS = np.array([vehicle.position for vehicle in vehicle_list]) #np.array(vehicle_pos_list)
     INIT_RPYS = np.zeros([num_vehicles,3])
