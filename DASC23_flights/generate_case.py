@@ -68,11 +68,8 @@ def DASC_cases():
     case.add_case(ID="DASC23_case_0",building_list=buildings,vehicle_list=vehicles)
     print(f'DASC23 0th case added into {case.filename}')
 
-
-
-
-    buildings = [Building([[4, -3, 0.75], [4, 0, 0.75], [2, 0, 0.75], [0,-2, 0.75], [0, -4, 0.75], [3, -4, 0.75]]),
-                 Building([[4, 3.5, 0.75], [4, 4, 0.75], [-3, 4, 0.75],[-4, 3, 0.75],[-4, -4, 0.75], [-3.5, -4, 0.75] , [-3.5, 0, 0.75], [0, 3.5, 0.75]])]
+    buildings = [Building([[4, -0.1, 0.75], [4, 0, 0.75], [2, 0, 0.75], [0,-2, 0.75], [0, -4, 0.75], [0.1, -4, 0.75], [0.1, -2, 0.75], [2, -0.1, 0.75]]),
+                 Building([[4, 3.5, 0.75], [4, 3.6, 0.75], [0, 3.6, 0.75],[-3.6, 0, 0.75],[-3.6, -4, 0.75], [-3.5, -4, 0.75] , [-3.5, 0, 0.75], [0, 3.5, 0.75]])]
     next_goal_list = [[-2,-4,0.5], [-2,-2,0.5] , [0,0,0.5] , [2,2,0.5] , [4,2,0.5]]
 
     Vehicle1 = Vehicle(ID="V1",source_strength=0.,imag_source_strength=0.85)
@@ -95,7 +92,8 @@ def DASC_cases():
 
 
     buildings = [Building([[4, 1.9, 0.75], [4, 2, 0.75], [-2, -4, 0.75], [-1.9,-4, 0.75]]),
-                Building([[-4, -2, 0.75], [2, 4, 0.75], [1.9, 4, 0.75],[-4, -1.9, 0.75]])]
+                 Building([[-4, -2, 0.75], [2, 4, 0.75], [1.9, 4, 0.75],[-4, -1.9, 0.75]])] 
+    
     next_goal_list = [[-4,-4,0.5], [-2,-2,0.5] , [0,0,0.5] , [2,2,0.5] , [4,4,0.5]]
 
     Vehicle1 = Vehicle(ID="V1",source_strength=0.,imag_source_strength=0.85)
@@ -116,8 +114,8 @@ def DASC_cases():
     case.add_case(ID="DASC23_case_2",building_list=buildings,vehicle_list=vehicles)
     print(f'DASC23 2nd case added into {case.filename}')
 
-    buildings = [Building([[4, -4, 0.75], [4, 3, 0.75], [3, 4, 0.75], [-3,4, 0.75] , [-3,3, 0.75] , [2,3, 0.75] , [3,2, 0.75] , [3,-4, 0.75]]),
-                Building([[0, -4, 0.75], [0, -1, 0.75], [-1, 0, 0.75],[-3, 0, 0.75] , [-3,-3, 0.75] , [-2,-4, 0.75]])]
+    buildings = [Building([[3.1, -4, 0.75], [3.1, 2, 0.75], [2, 3.1, 0.75], [-3,3.1, 0.75] , [-3,3, 0.75] , [2,3, 0.75] , [3,2, 0.75] , [3,-4, 0.75]]),
+                 Building([[0, -4, 0.75], [0, -1, 0.75], [-1, 0, 0.75],[-3, 0, 0.75] , [-3,-0.1, 0.75] , [-1,-0.1, 0.75], [-0.1,-1, 0.75], [-0.1,-4, 0.75]])]
     next_goal_list = [[-2, 1.5,0.5], [0,1.5,0.5] , [1.5,0,0.5] , [1.5,-2,0.5] , [1.5,-4,0.5]]
 
     Vehicle1 = Vehicle(ID="V1",source_strength=0.,imag_source_strength=0.85)
@@ -127,8 +125,10 @@ def DASC_cases():
 
     # Intruder
     Vehicle2 = Vehicle(ID="V2",source_strength=1.0,imag_source_strength=0.85)
-    Vehicle2.Set_Goal([4, 4 , 1.5], 5, 0)
-    Vehicle2.Set_Position([-4, -4, 1.5])
+    Vehicle2.Set_Goal([4, 4, 1.5], 5, 0)
+    Vehicle2.Set_Position([-1, -1 , 1.5])
+    #Vehicle2.Set_Goal([-4, -4, 1.5], 5, 0)
+    #Vehicle2.Set_Position([4, 4 , 1.5])
 
     vehicles = [Vehicle1,Vehicle2]
 
@@ -139,22 +139,22 @@ def DASC_cases():
     print(f'DASC23 3rd case added into {case.filename}')
 
 
-    buildings = [Building([[3, -4, 0.75], [4, -3, 0.75], [4, 3, 0.75], [3,4, 0.75]]),
-                Building([[0.5, 0.5, 0.75], [1, 1, 0.75], [1, 4, 0.75], [-1,4, 0.75] , [-1,1, 0.75] , [-0.5,0.5, 0.75]]),
-                Building([[1, -4, 0.75], [1, -3.5, 0.75], [0.5, -3, 0.75],[-2, -3, 0.75] , [-3,-2, 0.75] , [-3,4, 0.75] , [-4,3, 0.75] , [-4,-3, 0.75] , [-3,-4, 0.75]])]
+    buildings = [Building([[3, -4, 0.75], [3.1, -3, 0.75], [3.1, 3, 0.75], [3,4, 0.75]]),
+                 Building([[0.5, 0.5, 0.75], [1.1, 1, 0.75], [1.1, 4, 0.75], [1, 4, 0.75], [1, 1, 0.75], [0.5, 0.6, 0.75], [-1.5, 0.6, 0.75], [-1.9, 1, 0.75], [-1.9, 4, 0.75], [-2,4, 0.75] , [-2,1, 0.75] , [-1.5,0.5, 0.75]]),
+                 Building([[1, -4, 0.75], [1, -3.9, 0.75],[-3, -3.9, 0.75] , [-3.9,-3, 0.75] , [-3.9,4, 0.75] , [-4,3, 0.75] , [-4,-3, 0.75] , [-3,-4, 0.75]])]
     next_goal_list = [[2, 4, 0.5], [2,2,0.5] , [2,0,0.5] , [1,-1,0.5] , [-1,-1,0.5]  , [-2,0,0.5]  , [-2,2,0.5] , [-2,4,0.5]]
     next_goal_list = [[2,-4,0.5] , [2,-2,0.5] , [-1,-1,0.5]  , [-2,0,0.5]  , [-2,2,0.5] , [-2,4,0.5]]
 
 
     Vehicle1 = Vehicle(ID="V1",source_strength=0.,imag_source_strength=0.85)
-    Vehicle1.Set_Goal([-2, 4, 0.5], 5, 0)    
-    Vehicle1.Set_Position([2., 4. , 0.5])
+    Vehicle1.Set_Goal([-3, 3.5, 0.5], 5, 0)    
+    Vehicle1.Set_Position([2., 3.5 , 0.5])
     # Vehicle1.Go_to_Goal(0.5,0,0,0)
 
     # Intruder
     Vehicle2 = Vehicle(ID="V2",source_strength=1.0,imag_source_strength=0.85)
-    Vehicle2.Set_Goal([4, 4 , 1.5], 5, 0)
-    Vehicle2.Set_Position([-4, -4, 1.5])
+    Vehicle2.Set_Goal([4, 3.5 , 1.5], 5, 0)
+    Vehicle2.Set_Position([-4, -3.5, 1.5])
 
     vehicles = [Vehicle1,Vehicle2]
 
@@ -163,6 +163,30 @@ def DASC_cases():
 
     case.add_case(ID="DASC23_case_4",building_list=buildings,vehicle_list=vehicles)
     print(f'DASC23 4th case added into {case.filename}')
+
+    buildings = [Building([[3.1, -3, 0.75], [3.1, 3, 0.75], [3,4, 0.75], [3,-3, 0.75] , [2,-3.9, 0.75]  , [-3, -3.9, 0.75] , [-3.9,-3, 0.75] , [-3.9,4, 0.75] , [-4,3, 0.75] , [-4,-3, 0.75] , [-3,-4, 0.75], [2,-4, 0.75] ]),
+                Building([[0.5, 0.5, 0.75], [1.1, 1, 0.75], [1.1, 4, 0.75], [1, 4, 0.75], [1, 1, 0.75], [0.5, 0.6, 0.75], [-1.5, 0.6, 0.75], [-1.9, 1, 0.75], [-1.9, 4, 0.75], [-2,4, 0.75] , [-2,1, 0.75] , [-1.5,0.5, 0.75]])]
+    #next_goal_list = [[2, 4, 0.5], [2,2,0.5] , [2,0,0.5] , [1,-1,0.5] , [-1,-1,0.5]  , [-2,0,0.5]  , [-2,2,0.5] , [-2,4,0.5]]
+    #next_goal_list = [[2,-4,0.5] , [2,-2,0.5] , [-1,-1,0.5]  , [-2,0,0.5]  , [-2,2,0.5] , [-2,4,0.5]]
+
+
+    Vehicle1 = Vehicle(ID="V1",source_strength=0.,imag_source_strength=0.85)
+    Vehicle1.Set_Goal([-3, 3.5, 0.5], 5, 0)    
+    Vehicle1.Set_Position([2., 3.5 , 0.5])
+    # Vehicle1.Go_to_Goal(0.5,0,0,0)
+
+    # Intruder
+    Vehicle2 = Vehicle(ID="V2",source_strength=2.5,imag_source_strength=0.85)
+    Vehicle2.Set_Goal([4, 1.5 , 1.5], 5, 0)
+    Vehicle2.Set_Position([-4.5, -3.5, 1.5])
+
+    vehicles = [Vehicle1, Vehicle2]
+
+    case = Cases(filename="./cases.json")
+    # case.filename = "./cases.json"
+
+    case.add_case(ID="DASC23_case_5",building_list=buildings,vehicle_list=vehicles)
+    print(f'DASC23 5th case added into {case.filename}')
 
     # Just a building...
     buildings = [Building([[3, -4, 0.75], [4, -3, 0.75], [4, 3, 0.75], [3,4, 0.75]]),]
