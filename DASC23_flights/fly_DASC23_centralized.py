@@ -49,7 +49,24 @@ def main():
     for i,id in enumerate(id_list):
         swarm.tellos[i].set_ac_id(id)
 
-    case = Cases.get_case(filename='cases.json', casename='DASC23_case_1')
+    case = Cases.get_case(filename='cases.json', casename='DASC23_case_1T')
+    vehicles_next_goal_list = [[ [0,0,0.5]   , [2,2,0.5] , [3,2,0.5]], # Case 1 V0
+                               [ [-2,-2,1.5] , [-2,-3.5,1.5]]] # Case1 Intruder waypoints
+    
+
+    # case = Cases.get_case(filename='cases.json', casename='DASC23_case_2T')
+    # vehicles_next_goal_list = [[ [0,0,0.5] , [2,2,0.5] , [3.,3.,0.5]], # Case2
+    #                            [ [-3.5, -3.5 , 1.5] ]] # Intruder
+
+
+
+    # vehicle_next_goal_list = [ [1.5,0,0.5] , [1.5,-2,0.5] , [1.5,-3.5,0.5]] #Case3
+
+    # vehicle_next_goal_list = [ [2,0,0.5] , [1,-1,0.5] , [-2,-1,0.5]  , [-3,0,0.5]  , [-3,2,0.5] , [-3,3.5,0.5]] #Case5a
+
+    # vehicle_next_goal_list = [[3., 2, 1.4], [-3., 2, 1.4], [-3., 1, 1.4], [3., 1, 1.4], [3., 0, 1.4], [-3., 0, 1.4], [-3., -1, 1.4], [3., -1, 1.4], [3., -2, 1.4],[-3., -2, 1.4],[-3., -3, 1.4],[3., -3, 1.4], [3., 2, 1.4], [-3., 2, 1.4], [-3., 1, 1.4], [3., 1, 1.4], [3., 0, 1.4], [-3., 0, 1.4], [-3., -1, 1.4], [3., -1, 1.4],  ]
+    goal_index = 0
+
 
     # arena_version = 65 #102
     # vehicle_name_list =   ['V1']
@@ -60,10 +77,10 @@ def main():
     # vehicle_pos_list = [[3.5, 3, 1.4]]
     # vehicle_next_goal_list = [[3.5, 3, 1.4], [-3.5, 3, 1.4]]
 
-    goal_index = 0
+    
 
     num_vehicles = len(id_list)
-    # INIT_XYZS = np.array(vehicle_pos_list)
+    INIT_XYZS = np.array([vehicle.position for vehicle in case.vehicle_list])
     # INIT_RPYS = np.zeros([num_vehicles,3])
     TARGET_VELS = np.zeros([num_vehicles,3])
     FLOW_VELS = np.zeros([num_vehicles,3])
@@ -120,8 +137,24 @@ def main():
     sim_start_time = time.time()
     try:
         swarm.takeoff()
-        swarm.tellos[1].move_up(int(70))
+        
+        # swarm.tellos[1].move_up(int(70))
+        starttime= time.time()
+        while time.time()-starttime < 9:
+            for i,id in enumerate(id_list):
+                    # pos_desired = case.vehicles.np.array([0.5, 3.5, 1.4])
+                    # step =0.002
 
+                    # if heading < np.pi-step:
+                    #     heading +=step
+                    # else:
+                    #     heading =-heading
+
+                    # print(f'Heading {heading}')
+                    # j+=1
+                    swarm.tellos[i].fly_to_enu(INIT_XYZS[i], heading=0)
+
+        print('Finished moving !!!!!') #Finished 
         # Main loop :
         trace_count = 0
         set_vel_time = time.time()
@@ -142,16 +175,19 @@ def main():
                 # target_position = target_vehicle[0].position
                 # print(f'Target Pos : {target_position}')
 
-                # for vehicle_nr, vehicle in enumerate(vehicle_list):
+                for vehicle_nr, vehicle in enumerate(vehicle_list):
                     # print('Heyyo :', target_position, type(target_position))
-                    # vehicle.Set_Next_Goal(target_position+np.array([0.,0.,-0.5]), dynamic_sigma=True)
+                    # vehicle.Set_Next_Goal(vehicle_next_goal_list[], dynamic_sigma=True)
                     
-                    # # if vehicle.state :
-                    # if vehicle.distance_to_destination<0.50:
-                    #     print('Changing goal set point')
-                    #     vehicle.Set_Next_Goal(vehicle_next_goal_list[goal_index])
-                    #     goal_index += 1
-                    #     goal_index = goal_index%len(vehicle_next_goal_list)
+                    # if vehicle.state :
+                    if vehicle.distance_to_destination<0.50 and vehicle_nr==1:
+                        # print('Changing goal set point')
+                        vehicle.Set_Next_Goal(vehicles_next_goal_list[vehicle_nr][vehicle._sink_index])
+                        vehicle._sink_index += 1
+                        # print(f'Vehicle : {vehicle_nr} -- sink ind:{vehicle._sink_index}')
+                        vehicle._sink_index = np.clip(vehicle._sink_index, 0,len(vehicles_next_goal_list[vehicle_nr])-1)
+                        # print(f'Vehicle : {vehicle_nr} -- clipped :{vehicle._sink_index}')
+                        # goal_index = goal_index%len(vehicle_next_goal_list)
                 
                 # COMMUNICATION 
                 # for index,vehicle in enumerate(vehicle_list):
@@ -168,6 +204,8 @@ def main():
                     vehicle.Set_Position(swarm.tellos[i].get_position_enu())
                     vehicle.Set_Velocity(swarm.tellos[i].get_velocity_enu())
                     # print(f' {i} - Vel : {vehicle.velocity[0]:.3f}  {vehicle.velocity[1]:.3f}  {vehicle.velocity[2]:.3f}')
+                    # if i == 0 :
+                    # vehicle.Go_to_Goal(Vinfmag=1.0) # FIXME this is only for waypoint guidance
 
                 use_panel_flow = 1
                 if use_panel_flow :
@@ -186,8 +224,8 @@ def main():
                         # vel_enu = flow_vels[i]*limited_norm #- swarm.tellos[i].velocity_enu
                         # print(f' {i} - Flow Velocity : {flow_vels[i]}')
                         # print(f' {i} - Flow Velocity Error : {vel_enu_err}')
-                        if i==0:
-                            print(f' Velicle {i} -- Flow Vels : {vel_enu}')
+                        # if i==0:
+                            # print(f' Velicle {i} -- Flow Vels : {vel_enu}')
                         heading = 0.
                         # Look towards where you go
                         # heading = np.arctan2(vel_enu[1],vel_enu[0])
