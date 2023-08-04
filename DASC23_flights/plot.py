@@ -79,32 +79,32 @@ def plot_trajectory_2(timestamp, states, controls, building_hulls):
     #     plt.fill(     np.hstack((building_hulls[index][:,0],building_hulls[index][0,0]))  , np.hstack((building_hulls[index][:,1],building_hulls[index][0,1] )) ,'salmon', alpha=0.5 )
 
 
-    for building in building_hulls:
-        building_arr = np.array(building)
-        safetyfac = 1.1
-        rad = 0.0 #0.17
-        rad = rad * safetyfac
-        scale = 1e6
-        pco = pyclipper.PyclipperOffset()
-        pco.AddPath( (building_arr[:,:2] * scale).astype(int).tolist() , pyclipper.JT_MITER, pyclipper.ET_CLOSEDPOLYGON)
+    # for building in building_hulls:
+    #     building_arr = np.array(building)
+    #     safetyfac = 1.1
+    #     rad = 0.0 #0.17
+    #     rad = rad * safetyfac
+    #     scale = 1e6
+    #     pco = pyclipper.PyclipperOffset()
+    #     pco.AddPath( (building_arr[:,:2] * scale).astype(int).tolist() , pyclipper.JT_MITER, pyclipper.ET_CLOSEDPOLYGON)
 
-        inflated  =  np.array ( pco.Execute( rad*scale )[0] ) / scale
-        height = building_arr[0,2]
-        points = np.hstack(( inflated , np.ones((inflated.shape[0],1)) *height ))
-        Xavg = np.mean(points[:,0:1])
-        Yavg = np.mean(points[:,1:2])
-        angles = np.arctan2( ( Yavg*np.ones(len(points[:,1])) - points[:,1] ) , ( Xavg*np.ones(len(points[:,0])) - points[:,0] ) )
-        sorted_angles = sorted(zip(angles, points), reverse = True)
-        points_sorted = np.vstack([x for y, x in sorted_angles])
-        building_arr = points_sorted
-        # plt.plot( np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'salmon', alpha=0.8 )
-        # plt.fill( np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'salmon', alpha=0.8 )
+    #     inflated  =  np.array ( pco.Execute( rad*scale )[0] ) / scale
+    #     height = building_arr[0,2]
+    #     points = np.hstack(( inflated , np.ones((inflated.shape[0],1)) *height ))
+    #     Xavg = np.mean(points[:,0:1])
+    #     Yavg = np.mean(points[:,1:2])
+    #     angles = np.arctan2( ( Yavg*np.ones(len(points[:,1])) - points[:,1] ) , ( Xavg*np.ones(len(points[:,0])) - points[:,0] ) )
+    #     sorted_angles = sorted(zip(angles, points), reverse = True)
+    #     points_sorted = np.vstack([x for y, x in sorted_angles])
+    #     building_arr = points_sorted
+    #     # plt.plot( np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'salmon', alpha=0.8 )
+    #     # plt.fill( np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'salmon', alpha=0.8 )
 
-    for building in building_hulls:
-        building_arr = np.array(building)
-        #pdb.set_trace()
-        plt.plot(     np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1])) ,'m', alpha=1 )
-        plt.fill(     np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'m', alpha=1 )
+    # for building in building_hulls:
+    #     building_arr = np.array(building)
+    #     #pdb.set_trace()
+    #     plt.plot(     np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1])) ,'m', alpha=1 )
+    #     plt.fill(     np.hstack((building_arr[:,0],building_arr[0,0]))  , np.hstack((building_arr[:,1],building_arr[0,1] )) ,'m', alpha=1 )
 
     for _v in range(states.shape[0]):
         # if _v != 2 : continue
@@ -121,23 +121,24 @@ def plot_trajectory_2(timestamp, states, controls, building_hulls):
 
         # plt.scatter(pos_e, pos_n)
         plt.plot(pos_e, pos_n)
+
         # pdb.set_trace()
-        n=20
-        scale = 0.5
-        pos_e = pos_e[::n]
-        pos_n = pos_n[::n]
-        desired_e = desired_e[::n]*scale
-        desired_n = desired_n[::n]*scale
-        for i in range(len(pos_e)):
-            plt.arrow(pos_e[i], pos_n[i], desired_e[i], desired_n[i], head_width=0.03, head_length=0.03, fc='k', ec='k')
+        # n=20
+        # scale = 0.5
+        # pos_e = pos_e[::n]
+        # pos_n = pos_n[::n]
+        # desired_e = desired_e[::n]*scale
+        # desired_n = desired_n[::n]*scale
+        # for i in range(len(pos_e)):
+        #     plt.arrow(pos_e[i], pos_n[i], desired_e[i], desired_n[i], head_width=0.03, head_length=0.03, fc='k', ec='k')
 
     # Target position is recorded in each vehicle's control dictionary
     # So we can take vehicle 0's control dict and obtain the positions
-    target_e = controls[0,9,k1:k2]
-    target_n = controls[0,10,k1:k2]
+    # target_e = controls[0,9,k1:k2]
+    # target_n = controls[0,10,k1:k2]
 
-    # plt.scatter(pos_e, pos_n)
-    plt.plot(target_e, target_n, '--r')
+    # # plt.scatter(pos_e, pos_n)
+    # plt.plot(target_e, target_n, '--r')
 
     # plt.plot(Vehicle1.path[:,0],Vehicle1.path[:,1],'r',linewidth = 2)
     # plt.plot(Vehicle1.path[0,0],Vehicle1.path[0,1],'o')

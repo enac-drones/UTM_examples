@@ -35,7 +35,10 @@ def main():
     visualize = False#True
 
     #---------- OpTr- ACID - -----IP------
-    ac_list = [['65', '65', '192.168.1.65'],]
+    # ac_list = [['65', '65', '192.168.1.65'],]
+    
+    ac_list =  [['65', '65', '192.168.1.65'],
+               ['66', '66', '192.168.1.66'],]
 
     ip_list = [_[2] for _ in ac_list]
     swarm = TelloSwarm.fromIps(ip_list)
@@ -44,7 +47,7 @@ def main():
     for i,id in enumerate(id_list):
         swarm.tellos[i].set_ac_id(id)
 
-    case = Cases.get_case(filename='cases.json', casename='target_tracking_1_vehicle')
+    case = Cases.get_case(filename='cases.json', casename='twodrones')
 
     # arena_version = 65 #102
     # vehicle_name_list =   ['V1']
@@ -73,25 +76,26 @@ def main():
     print('Connected to Tello Swarm...')
 
     ac_id_list = [[_[0], _[1]] for _ in ac_list]
-    ac_id_list.append(['888', '888']) # Add a moving target
-    target_vehicle = [Target('888')]
-    all_vehicles = swarm.tellos+target_vehicle
+    # ac_id_list.append(['888', '888']) # Add a moving target
+    # target_vehicle = [Target('888')]
+    # all_vehicles = swarm.tellos+target_vehicle
 
-    voliere = VolierePosition(ac_id_list, swarm.tellos+target_vehicle, freq=40)
+    # voliere = VolierePosition(ac_id_list, swarm.tellos+target_vehicle, freq=40)
+    voliere = VolierePosition(ac_id_list, swarm.tellos, freq=40)
     voliere.run()
     sleep(4)
-    building_hulls=voliere.get_markerset_pos()
-    log.set_building_hulls(building_hulls)
+    # building_hulls=voliere.get_markerset_pos()
+    # log.set_building_hulls(building_hulls)
 
     # Generating an example Source for population
     # population = [Source(ID=0, source_strength=0.8, position=np.array([-1., 3., 0.4]))]
     population = None
 
-    Arena = ArenaMap(building_hulls=building_hulls)
-    # Arena = ArenaMap(version = 101)
-    Arena.Inflate(radius = 0.17)
-    Arena.Panelize(size=0.01)
-    Arena.Calculate_Coef_Matrix()
+    # Arena = ArenaMap(building_hulls=building_hulls)
+    # # Arena = ArenaMap(version = 101)
+    # Arena.Inflate(radius = 0.17)
+    # Arena.Panelize(size=0.01)
+    # Arena.Calculate_Coef_Matrix()
     # Arena.Visualize2D()
     # Arena.Wind(0,0,info = 'unknown') # Not used for the moment !
 
@@ -102,7 +106,7 @@ def main():
     vehicle_list = case.vehicle_list
 
     for i, vehicle in enumerate(vehicle_list):
-        vehicle.arena = Arena
+        vehicle.arena = case.arena
         vehicle.vehicle_list = vehicle_list
 
     print("Starting Natnet3.x interface at %s" % ("1234567"))
@@ -130,12 +134,12 @@ def main():
                 if flight_finished: break
 
                 # Get Target position to follow
-                target_position = target_vehicle[0].position
-                print(f'Target Pos : {target_position}')
+                # target_position = target_vehicle[0].position
+                # print(f'Target Pos : {target_position}')
 
-                for vehicle_nr, vehicle in enumerate(vehicle_list):
+                # for vehicle_nr, vehicle in enumerate(vehicle_list):
                     # print('Heyyo :', target_position, type(target_position))
-                    vehicle.Set_Next_Goal(target_position+np.array([0.,0.,-0.5]), dynamic_sigma=True)
+                    # vehicle.Set_Next_Goal(target_position+np.array([0.,0.,-0.5]), dynamic_sigma=True)
                     
                     # # if vehicle.state :
                     # if vehicle.distance_to_destination<0.50:
