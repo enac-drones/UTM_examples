@@ -9,8 +9,9 @@ from gflow.panel_flow import Flow_Velocity_Calculation
 
 #case =  Cases.get_case(filename='cases.json', casename='default')
 
-case =  Cases.get_case(filename='cases.json', casename='ERF_case_0')
-population = [Source(ID="EX0",source_strength=0.3,position=np.array([-1, 2.5 , 0.45]))]
+case =  Cases.get_case(filename='cases.json', casename='ERF_case_1')
+#population = [Source(ID="EX0",source_strength=0.3,position=np.array([-1, 2.5 , 0.45]))] #for Case 0
+population = [Source(ID="EX0",source_strength=0,position=np.array([-2, 0 , 0.45]))] #for Case 1 --> source_strength=0.7
 for vehicle in case.vehicle_list:
     vehicle.externalSource = population    
     
