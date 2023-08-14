@@ -38,7 +38,7 @@ class Vehicle():
         return self._battery
     
     def start_state_update(self):
-        self.log_conf = LogConfig(name='Position', period_in_ms=10)
+        self.log_conf = LogConfig(name='Position', period_in_ms=100)
         self.log_conf.add_variable('kalman.stateX', 'float')
         self.log_conf.add_variable('kalman.stateY', 'float')
         self.log_conf.add_variable('kalman.stateZ', 'float')
@@ -57,7 +57,7 @@ class Vehicle():
         # self.log_conf.start()
 
     def position_update_callback(self):
-        self.log_conf = LogConfig(name='Position', period_in_ms=10)
+        self.log_conf = LogConfig(name='Position', period_in_ms=100)
         self.log_conf.add_variable('kalman.stateX', 'float')
         self.log_conf.add_variable('kalman.stateY', 'float')
         self.log_conf.add_variable('kalman.stateZ', 'float')
@@ -72,7 +72,7 @@ class Vehicle():
                 break
 
     def velocity_update_callback(self):
-        self.log_conf = LogConfig(name='Position', period_in_ms=10)
+        self.log_conf = LogConfig(name='Position', period_in_ms=100)
         self.log_conf.add_variable('stateEstimate.vx', 'float')
         self.log_conf.add_variable('stateEstimate.vy', 'float')
         self.log_conf.add_variable('stateEstimate.vz', 'float')
