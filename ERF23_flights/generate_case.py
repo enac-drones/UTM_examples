@@ -175,6 +175,36 @@ def ERF_cases():
 # ==============================================================
 # ==============================================================
 
+    ''' Hand generated buildings as corridors'''
+    building_height = 0.75
+    buildings = [Building([[-0.82 ,  3.217,  1.85 ],[-1.121,  3.052,  1.85 ],[-1.451,  2.384,  1.85 ],[-1.225,  1.749,  1.85 ],[-0.806,  1.479,  1.85 ],[ 0.363,  2.253,  1.85 ]]),
+                 Building([[ 1.983, -0.884,  1.839],[ 1.517, -0.333,  1.839], [ 1.303, -0.302,  1.839],[ 1.111, -0.333,  1.839],[ 0.907, -0.437,  1.839],[ 0.777, -0.566,  1.839],[ 1.948, -1.215,  1.839]]),
+                 Building([[4.163, 2.803, 1.857],[2.437, 3.887, 1.857],[1.698, 3.337, 1.857],[1.794, 1.718, 1.857],[2.206, 1.389, 1.857],[3.811, 1.663, 1.857],[4.155, 2.332, 1.857]]),
+                 Building([[-1.184, -1.625,  1.58 ],[-2.677, -1.711,  1.58 ],[-3.166, -3.644,  1.58 ],[-2.698, -4.168,  1.58 ],[-1.793, -4.429,  1.58 ], [-0.679, -3.848,  1.58 ],[-0.534, -3.616,  1.58 ],[-0.422, -3.32 ,  1.58 ]]),
+                 Building([[-0.141,  0.489,  1.697],[-0.222,  0.651,  1.697],[-1.031,  0.426,  1.697],[-1.014,  0.239,  1.697],[-0.358, -0.024,  1.697],[-0.18 ,  0.157,  1.697],[-0.139,  0.265,  1.697]])]    
+    
+    Vehicle1 = Vehicle(ID="V1",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle1.Set_Goal([ 2.7, -2.7,  0.5], 5, 0)    
+    Vehicle1.Set_Position([0.7, 3. , 0.5])
+    # Vehicle1.Go_to_Goal(0.5,0,0,0)
+
+    Vehicle2 = Vehicle(ID="V2",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle2.Set_Goal([-3.4,  1.9,  0.5], 5, 0)
+    Vehicle2.Set_Position([3.1, -0.7,  0.5])
+    # Vehicle2.Go_to_Goal(2.5,0,0,0) 
+
+    Vehicle3 = Vehicle("V3",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle3.Set_Goal([ 1.9, -3.2,  0.5], 5, 0)
+    Vehicle3.Set_Position([-2.3,  1.2,  0.5])
+    vehicles = [Vehicle1,Vehicle2,Vehicle3]
+    # Vehicle3.Go_to_Goal(2.5,0,0,0)
+
+    case = Cases(filename="./cases.json")
+    # case.filename = "./cases.json"
+
+    case.add_case(ID="ERF_case_1",building_list=buildings,vehicle_list=vehicles)
+    print(f'ERF 1th case added into {case.filename}')
+
 def DASC_cases():
     ''' Hand generated buildings as corridors'''
     building_height = 0.75
