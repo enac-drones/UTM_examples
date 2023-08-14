@@ -63,6 +63,27 @@ def crazyTown():
     case.add_case(ID="CT_demo_1v",building_list=buildings,vehicle_list=vehicles)
     print(f'CrazyTown single vehicle demo added into {case.filename}')
 
+    # ===============
+    buildings=[]
+
+    Vehicle1 = Vehicle(ID="V1",source_strength=0.7,imag_source_strength=0.85)
+    Vehicle1.Set_Goal([0.5, 0.3, 0.4], 5, 0)    
+    Vehicle1.Set_Position([-0.1, 0 , 0.4])
+    # Vehicle1.Go_to_Goal(0.5,0,0,0)
+
+    Vehicle2 = Vehicle(ID="V2",source_strength=0.7,imag_source_strength=0.85)
+    Vehicle2.Set_Goal([1, 0.0, 0.5], 5, 0)    
+    Vehicle2.Set_Position([-0.1, 0 , 0.4])
+    # Vehicle2.Go_to_Goal(0.5,0,0,0)
+
+    vehicles = [Vehicle1, Vehicle2]
+    
+    case = Cases(filename="./cases.json")
+    # case.filename = "./cases.json"
+
+    case.add_case(ID="CT_demo_2v",building_list=buildings,vehicle_list=vehicles)
+    print(f'CrazyTown two vehicle demo added into {case.filename}')
+
 
 if __name__ == "__main__":
 #    main()

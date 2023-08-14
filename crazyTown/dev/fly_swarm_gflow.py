@@ -161,21 +161,22 @@ def basic_example():
 def main():
     cflib.crtp.init_drivers()
 
-    URI1 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E701')
+    # URI1 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E701')
     # URI2 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E702')
-    # URI3 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E703')
-    # URI4 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E704')
+    URI3 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E703')
+    URI4 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E704')
     # uris = [URI1, URI2, URI3, URI4]
 
-    uris = [URI1] #, URI2]
+    # uris = [URI1] #, URI2]
     # uris = [URI1, URI2]
+    uris = [URI3, URI4]
 
 
-    case = Cases.get_case(filename='cases.json', casename='CT_demo_1v')
-    # case = Cases.get_case(filename='cases.json', casename='ERF23_case_2v')
-    # case = Cases.get_case(filename='cases.json', casename='ERF23_case_3v')
-    vehicles_next_goal_list = [[ [0, 1.0,0.4], [1.0,0,0.4] , [0,-.8,0.4], [-1.0,0,0.4]], # V0
-                               [ [0, 2.5,0.8], [-2, 0,0.8] , [0,-2.5,0.8], [ 2.5,0,0.8]], # V1
+    # case = Cases.get_case(filename='cases.json', casename='CT_demo_1v')
+    case = Cases.get_case(filename='cases.json', casename='CT_demo_2v')
+
+    vehicles_next_goal_list = [[ [0, 0.4,0.4], [1.0,0,0.4] , [0,-1.2,0.4], [-1.0,0,0.4]], # V0
+                               [ [0, 0.4,0.5],[-1, 0,0.5] , [0,-1.0,0.5], [ .9,0.2,0.5]], # V1
                                [ [-2, 0 ,0.8], [0,2.5,0.8] , [0,-2.5,0.8], [ 2.5,0,0.8]], # V2
                                [ [0, 2.5,0.8], [0,-2.5,0.8], [-2, 0 ,0.8], [ 2.5,0,0.8]],]# V3
     
@@ -223,15 +224,15 @@ def main():
 
         starttime= time.time()
         sim_start_time = time.time()
-        while time.time()-sim_start_time < 120:
-            if time.time()-starttime > 0.2:
+        while time.time()-sim_start_time < 60:
+            if time.time()-starttime > 0.1:
                 # print(f'Freq : {1/(time.time()-starttime):.3f}')
                 starttime= time.time()
                         
                 for i, vehicle in enumerate(vehicle_list):
                     vehicle.Set_Position(swarm._vehicles[i].position)
                     vehicle.Set_Velocity(swarm._vehicles[i].velocity)
-                    print(vehicle.position)
+                    # print(vehicle.position)
                     # print(f' {i} - Vel : {vehicle.velocity[0]:.3f}  {vehicle.velocity[1]:.3f}  {vehicle.velocity[2]:.3f}')
                     # if i == 0 :
                     # vehicle.Go_to_Goal(Vinfmag=1.0) # FIXME this is only for waypoint guidance
@@ -266,9 +267,9 @@ def main():
                         mag = np.linalg.norm(V_des)
                         V_des_unit = V_des/mag
                         # V_des_unit[2] = 0.
-                        mag = np.clip(mag, 0., 0.3)
+                        mag = np.clip(mag, 0., 0.25)
                         vel_enu = V_des_unit*mag
-                        vel_enu[2] = V_des[2]
+                        vel_enu[2] = V_des[2]*0.5
                         # vel_enu[2] = 0. 
                         # print('Vel enu : ',vel_enu)
                         # swarm.tellos[i].update(swarm.tellos, )
@@ -291,7 +292,7 @@ def main():
                         # swarm.tellos[i].send_velocity_enu(vehicle.velocity_desired, heading)
                         # swarm.tellos[i].send_velocity_enu(vel_enu, heading)
 
-                        swarm._vehicles[i].scf.cf.commander.send_velocity_world_setpoint(
+                        swarm._vehicles[i]._cf.commander.send_velocity_world_setpoint(
                                                                             vel_enu[0],
                                                                             vel_enu[1],
                                                                             vel_enu[2],
