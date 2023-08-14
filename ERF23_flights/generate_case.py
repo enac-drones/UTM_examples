@@ -40,6 +40,8 @@ def main():
     #case.add_case(ID="test2",building_list=buildings,vehicle_list=vehicles)
     #print(case.cases)
 
+# ==============================================================
+# ==============================================================
 def ERF_cases():
     ''' Hand generated buildings as corridors'''
     building_height = 0.75
@@ -75,6 +77,103 @@ def ERF_cases():
 
     case.add_case(ID="ERF_case_0",building_list=buildings,vehicle_list=vehicles)
     print(f'ERF 0th case added into {case.filename}')
+
+    # ===============
+    buildings=[]
+
+    Vehicle1 = Vehicle(ID="V1",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle1.Set_Goal([-2.0, 0, 0.8], 5, 0)    
+    Vehicle1.Set_Position([-2.1, 0 , 0.8])
+    # Vehicle1.Go_to_Goal(0.5,0,0,0)
+
+    vehicles = [Vehicle1]
+    
+    case = Cases(filename="./cases.json")
+    # case.filename = "./cases.json"
+
+    case.add_case(ID="ERF23_case_1v",building_list=buildings,vehicle_list=vehicles)
+    print(f'ERF23 single vehicle case added into {case.filename}')
+
+    # ===============
+    buildings=[]
+
+    Vehicle1 = Vehicle(ID="V1",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle1.Set_Goal([-2.,  0, 0.8], 5, 0)    
+    Vehicle1.Set_Position([-2.1, 0 , 0.8])
+    # Vehicle1.Go_to_Goal(0.5,0,0,0)
+
+    Vehicle2 = Vehicle(ID="V2",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle2.Set_Goal([2.5, 0, 0.8], 5, 0)
+    Vehicle2.Set_Position([2.6, 0 , 0.8])
+    # Vehicle2.Go_to_Goal(2.5,0,0,0) 
+
+    vehicles = [Vehicle1, Vehicle2]
+    
+    case = Cases(filename="./cases.json")
+    # case.filename = "./cases.json"
+
+    case.add_case(ID="ERF23_case_2v",building_list=buildings,vehicle_list=vehicles)
+    print(f'ERF23 two vehicle case added into {case.filename}')
+
+    # ===============
+    buildings=[]
+
+    Vehicle1 = Vehicle(ID="V1",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle1.Set_Goal([-2.,  0, 0.8], 5, 0)    
+    Vehicle1.Set_Position([-2.1, 0 , 0.8])
+    # Vehicle1.Go_to_Goal(0.5,0,0,0)
+
+    Vehicle2 = Vehicle(ID="V2",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle2.Set_Goal([2.5, 0, 0.8], 5, 0)
+    Vehicle2.Set_Position([2.6, 0 , 0.8])
+    # Vehicle2.Go_to_Goal(2.5,0,0,0) 
+
+    Vehicle3 = Vehicle(ID="V3",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle3.Set_Goal([0, 2.5, 0.8], 5, 0)
+    Vehicle3.Set_Position([0, 2.6 , 0.8])
+    # Vehicle2.Go_to_Goal(2.5,0,0,0) 
+
+    vehicles = [Vehicle1, Vehicle2, Vehicle3]
+    
+    case = Cases(filename="./cases.json")
+    # case.filename = "./cases.json"
+
+    case.add_case(ID="ERF23_case_3v",building_list=buildings,vehicle_list=vehicles)
+    print(f'ERF23 three vehicle case added into {case.filename}')
+
+        # ===============
+    buildings=[]
+
+    Vehicle1 = Vehicle(ID="V1",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle1.Set_Goal([-2.,  0, 0.8], 5, 0)    
+    Vehicle1.Set_Position([-2.1, 0 , 0.8])
+    # Vehicle1.Go_to_Goal(0.5,0,0,0)
+
+    Vehicle2 = Vehicle(ID="V2",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle2.Set_Goal([2.5, 0, 0.8], 5, 0)
+    Vehicle2.Set_Position([2.6, 0 , 0.8])
+    # Vehicle2.Go_to_Goal(2.5,0,0,0) 
+
+    Vehicle3 = Vehicle(ID="V3",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle3.Set_Goal([0, 2.5, 0.8], 5, 0)
+    Vehicle3.Set_Position([0, 2.6 , 0.8])
+    # Vehicle2.Go_to_Goal(2.5,0,0,0) 
+
+    Vehicle4 = Vehicle(ID="V4",source_strength=0.5,imag_source_strength=0.85)
+    Vehicle4.Set_Goal([0, -2.5, 0.8], 5, 0)
+    Vehicle4.Set_Position([0, -2.6 , 0.8])
+    # Vehicle2.Go_to_Goal(2.5,0,0,0) 
+
+    vehicles = [Vehicle1, Vehicle2, Vehicle3, Vehicle4]
+    
+    case = Cases(filename="./cases.json")
+    # case.filename = "./cases.json"
+
+    case.add_case(ID="ERF23_case_4v",building_list=buildings,vehicle_list=vehicles)
+    print(f'ERF23 four vehicle case added into {case.filename}')
+
+# ==============================================================
+# ==============================================================
 
 def DASC_cases():
     ''' Hand generated buildings as corridors'''

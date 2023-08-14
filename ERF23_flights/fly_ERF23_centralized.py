@@ -3,6 +3,7 @@ import time
 from djitellopy import TelloSwarm
 from voliere import VolierePosition
 from voliere import Vehicle as Target
+from gflow.source import Source
 import pdb
 import numpy as np
 
@@ -35,12 +36,17 @@ def main():
     #---------- OpTr- ACID - -----IP------
     # ac_list = [['65', '65', '192.168.1.65'],]
 
+    # ac_list =  [['65', '65', '192.168.1.65'],
+    #             ['66', '66', '192.168.1.66'],]
+
     ac_list =  [['65', '65', '192.168.1.65'],
-                ['66', '66', '192.168.1.66'],]
+                ['66', '66', '192.168.1.66'],
+                ['67', '67', '192.168.1.67'] ]
 
     # ac_list =  [['65', '65', '192.168.1.65'],
     #             ['66', '66', '192.168.1.66'],
-    #             ['67', '67', '192.168.1.67'] ]
+    #             ['67', '67', '192.168.1.67'],
+    #             ['68', '68', '192.168.1.68'] ]
 
     ip_list = [_[2] for _ in ac_list]
     swarm = TelloSwarm.fromIps(ip_list)
@@ -49,9 +55,13 @@ def main():
     for i,id in enumerate(id_list):
         swarm.tellos[i].set_ac_id(id)
 
-    case = Cases.get_case(filename='cases.json', casename='DASC23_case_1T')
-    vehicles_next_goal_list = [[ [0,0,0.5]   , [2,2,0.5] , [3,2,0.5]], # Case 1 V0
-                               [ [-2,-2,1.5] , [-2,-3.5,1.5]]] # Case1 Intruder waypoints
+    # case = Cases.get_case(filename='cases.json', casename='ERF23_case_1v')
+    # case = Cases.get_case(filename='cases.json', casename='ERF23_case_2v')
+    case = Cases.get_case(filename='cases.json', casename='ERF23_case_3v')
+    vehicles_next_goal_list = [[ [0, 2.5,0.8], [2.5,0,0.8] , [0,-2.5,0.8], [-2.0,0,0.8]], # V0
+                               [ [0, 2.5,0.8], [-2, 0,0.8] , [0,-2.5,0.8], [ 2.5,0,0.8]], # V1
+                               [ [-2, 0 ,0.8], [0,2.5,0.8] , [0,-2.5,0.8], [ 2.5,0,0.8]], # V2
+                               [ [0, 2.5,0.8], [0,-2.5,0.8], [-2, 0 ,0.8], [ 2.5,0,0.8]],]# V3
     
 
     # case = Cases.get_case(filename='cases.json', casename='DASC23_case_2T')
@@ -95,26 +105,27 @@ def main():
     print('Connected to Tello Swarm...')
 
     ac_id_list = [[_[0], _[1]] for _ in ac_list]
-    # ac_id_list.append(['888', '888']) # Add a moving target
-    # target_vehicle = [Target('888')]
+    ac_id_list.append(['888', '888']) # Add a moving target (helmet)
+    ac_id_list.append(['890', '890']) # Add a moving target (soft ball)
+    target = [Target('888')]
+    ball = [Target('890')]
     # all_vehicles = swarm.tellos+target_vehicle
 
-    voliere = VolierePosition(ac_id_list, swarm.tellos, freq=40)
+    voliere = VolierePosition(ac_id_list, swarm.tellos+target+ball, freq=40)
     voliere.run()
     sleep(4)
 
-    # building_hulls=voliere.get_markerset_pos()
-    # log.set_building_hulls(building_hulls)
+    building_hulls=voliere.get_markerset_pos()
+    log.set_building_hulls(building_hulls)
 
     # Generating an example Source for population
-    # population = [Source(ID=0, source_strength=0.8, position=np.array([-1., 3., 0.4]))]
-    population = None
+    population = [Source(ID=0, source_strength=0.3, position=np.array([4., 4., 0.4]))]
+    # population = None
 
-    # Arena = ArenaMap(building_hulls=building_hulls)
-    # Arena = ArenaMap(version = 101)
-    # Arena.Inflate(radius = 0.17)
-    # Arena.Panelize(size=0.01)
-    # Arena.Calculate_Coef_Matrix()
+    Arena = ArenaMap(building_hulls=building_hulls)
+    Arena.Inflate(radius = 0.17)
+    Arena.Panelize(size=0.01)
+    Arena.Calculate_Coef_Matrix()
     # Arena.Visualize2D()
     # Arena.Wind(0,0,info = 'unknown') # Not used for the moment !
 
@@ -123,9 +134,8 @@ def main():
     hor = 3.0
     
     vehicle_list = case.vehicle_list
-    Arena = case.arena
-
-    log.set_buildings(Arena.buildings)
+    # Arena = case.arena
+    # log.set_buildings(Arena.buildings)
 
     # for i, vehicle in enumerate(vehicle_list):
     #     vehicle.arena = Arena
@@ -139,20 +149,20 @@ def main():
         swarm.takeoff()
         
         # swarm.tellos[1].move_up(int(70))
-        starttime= time.time()
-        while time.time()-starttime < 9:
-            for i,id in enumerate(id_list):
-                    # pos_desired = case.vehicles.np.array([0.5, 3.5, 1.4])
-                    # step =0.002
+        # starttime= time.time()
+        # while time.time()-starttime < 9:
+        #     for i,id in enumerate(id_list):
+        #             # pos_desired = case.vehicles.np.array([0.5, 3.5, 1.4])
+        #             # step =0.002
 
-                    # if heading < np.pi-step:
-                    #     heading +=step
-                    # else:
-                    #     heading =-heading
+        #             # if heading < np.pi-step:
+        #             #     heading +=step
+        #             # else:
+        #             #     heading =-heading
 
-                    # print(f'Heading {heading}')
-                    # j+=1
-                    swarm.tellos[i].fly_to_enu(INIT_XYZS[i], heading=0)
+        #             # print(f'Heading {heading}')
+        #             # j+=1
+        #             swarm.tellos[i].fly_to_enu(INIT_XYZS[i], heading=0)
 
         print('Finished moving !!!!!') #Finished 
         # Main loop :
@@ -171,21 +181,33 @@ def main():
                 # print(f' {vehicle_list[0].distance_to_destination:.3f}  -  {vehicle_list[1].distance_to_destination:.3f}  -  {vehicle_list[2].distance_to_destination:.3f}')
                 if flight_finished: break
 
-                # Get Target position to follow
-                # target_position = target_vehicle[0].position
-                # print(f'Target Pos : {target_position}')
+                # Get Source position to avoid
+                source_position = ball[0].position
+                # Get Sink position to follow if needed
+                sink_position = target[0].position
+                # Update it on the population list
+                population[0].position = source_position
+                # print(f'Source Pos : {source_position}')
+
+                # For dynamic sink with Helmet :
+                # for vehicle_nr, vehicle in enumerate(vehicle_list):
+                #     vehicle.Set_Next_Goal(sink_position+np.array([0.,0.,-0.2]), dynamic_sigma=True)
+
 
                 for vehicle_nr, vehicle in enumerate(vehicle_list):
                     # print('Heyyo :', target_position, type(target_position))
                     # vehicle.Set_Next_Goal(vehicle_next_goal_list[], dynamic_sigma=True)
                     
                     # if vehicle.state :
-                    if vehicle.distance_to_destination<0.50 and vehicle_nr==1:
-                        # print('Changing goal set point')
+                    if vehicle.distance_to_destination<0.50:# and vehicle_nr==1:
+                        print('Changing goal set point')
                         vehicle.Set_Next_Goal(vehicles_next_goal_list[vehicle_nr][vehicle._sink_index])
                         vehicle._sink_index += 1
                         # print(f'Vehicle : {vehicle_nr} -- sink ind:{vehicle._sink_index}')
-                        vehicle._sink_index = np.clip(vehicle._sink_index, 0,len(vehicles_next_goal_list[vehicle_nr])-1)
+                        # The below is to have a finite waypoint
+                        # vehicle._sink_index = np.clip(vehicle._sink_index, 0,len(vehicles_next_goal_list[vehicle_nr])-1)
+                        # This one is to have an infinite loop of waypoints
+                        vehicle._sink_index = vehicle._sink_index%len(vehicles_next_goal_list[vehicle_nr])
                         # print(f'Vehicle : {vehicle_nr} -- clipped :{vehicle._sink_index}')
                         # goal_index = goal_index%len(vehicle_next_goal_list)
                 
@@ -203,6 +225,7 @@ def main():
                 for i, vehicle in enumerate(vehicle_list):
                     vehicle.Set_Position(swarm.tellos[i].get_position_enu())
                     vehicle.Set_Velocity(swarm.tellos[i].get_velocity_enu())
+                    # print(vehicle.position)
                     # print(f' {i} - Vel : {vehicle.velocity[0]:.3f}  {vehicle.velocity[1]:.3f}  {vehicle.velocity[2]:.3f}')
                     # if i == 0 :
                     # vehicle.Go_to_Goal(Vinfmag=1.0) # FIXME this is only for waypoint guidance
@@ -217,8 +240,10 @@ def main():
                         mag = np.linalg.norm(V_des)
                         V_des_unit = V_des/mag
                         # V_des_unit[2] = 0.
-                        mag = np.clip(mag, 0., 1.0)
+                        mag = np.clip(mag, 0., 0.6)
                         vel_enu = V_des_unit*mag
+                        vel_enu[2] = V_des[2]
+                        print('Vel enu : ',vel_enu)
                         # swarm.tellos[i].update(swarm.tellos, )
 
                         # vel_enu = flow_vels[i]*limited_norm #- swarm.tellos[i].velocity_enu
@@ -272,13 +297,13 @@ def main():
                                timestamp=time.time()-sim_start_time,
                                state= np.hstack([swarm.tellos[i].get_position_enu(), swarm.tellos[i].get_velocity_enu(), swarm.tellos[i].get_quaternion(),  np.zeros(10)]),#obs[str(j)]["state"],
                             #    control=np.hstack([TARGET_VELS[i], FLOW_VELS[i], V_sum[i], 0., target_vehicle[0].position]),
-                               control=np.hstack([TARGET_VELS[i], FLOW_VELS[i], np.zeros(2), 0., np.zeros(3)]),
+                               control=np.hstack([TARGET_VELS[i], FLOW_VELS[i], population[0].position, sink_position]),
                                sim=False
                                # control=np.hstack([TARGET_VEL[j, wp_counters[j], 0:3], np.zeros(9)])
                                )
 
         #### Save the simulation results ###########################
-        log.save(flight_type='fast_follow')
+        log.save(flight_type='ERF23')
         swarm.move_down(int(40))
         swarm.land()
         voliere.stop()
@@ -286,7 +311,7 @@ def main():
 
     except (KeyboardInterrupt, SystemExit):
         print("Shutting down natnet interfaces...")
-        log.save(flight_type='fast_follow')
+        log.save(flight_type='ERF23')
         swarm.move_down(int(40))
         swarm.land()
         voliere.stop()
