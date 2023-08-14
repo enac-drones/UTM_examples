@@ -11,9 +11,11 @@ from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.crazyflie.syncLogger import SyncLogger
 from cflib.utils import uri_helper
 
+import zmq
 
 class Vehicle():
-    def __init__(self,uri:str) -> None:
+    def __init__(self,uri:str, report_socket=None) -> None:
+        self.report_socket=report_socket
         self._uri = uri
         self._position = np.zeros(3)
         self._velocity = np.zeros(3)
@@ -124,6 +126,38 @@ class Vehicle():
         print('Disconnected from %s' % link_uri)
         self.is_connected = False
 
+    def send_report(self):
+        if self.report_socket is None:
+            return
+
+        # for i, controller in enumerate(self.controllers):
+        state = "idle"
+        if not self._cf.is_connected():
+            state = "disconnected"
+        # elif self._cf.is_crashed():
+        #     state = "crashed"
+        # elif self._cf.is_flying():
+        #     state = "flying"
+        # elif self._cf.is_taking_off():
+        #     state = "hovering"
+        # elif self._cf.is_landing():
+        #     state = "landing"
+        # elif self._cf.is_charged_for_flight():
+        #     state = "ready"
+        # elif self._cf.is_charging():
+        #     state = "charging"
+
+        try:
+            report = {
+                'id': 1,
+                'state': state,
+                'battery': self._battery,#controller.get_charge_level(),
+                'uptime': 10, #controller.up_time_ms,
+                'flighttime': 100, #controller.flight_time_ms,
+            }
+            self.report_socket.send_json(report, zmq.NOBLOCK)
+        except Exception:
+            pass
     
     # def start_state_update(self):
     #     self.log_conf = LogConfig(name='Position', period_in_ms=100)
@@ -184,16 +218,16 @@ class Vehicle():
         self._cf.close_link()
 
 class Swarm():
-    def __init__(self,uris:list) -> None:
+    def __init__(self,uris:list, report_socket=None) -> None:
         self._uris = uris
-        self._vehicles = [Vehicle(uri) for uri in uris]
+        self._vehicles = [Vehicle(uri, report_socket=report_socket) for uri in uris]
         for vehicle in self._vehicles:
             # vehicle._cf.open_link()
             time.sleep(0.1)
         
     def take_off(self):
         for vehicle in self._vehicles:
-            vehicle._cf.high_level_commander.takeoff(0.5, 1.5)
+            vehicle._cf.high_level_commander.takeoff(0.4, 1.5)
         time.sleep(1.5)
     
     def land(self):
