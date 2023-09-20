@@ -42,22 +42,23 @@ def main():
 
     URI1 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E701')
     URI2 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E702')
-    # URI3 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E703')
+    URI3 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E703')
     # URI4 = uri_helper.uri_from_env(default='radio://0/80/1M/E7E7E7E704')
     # uris = [URI1, URI2, URI3, URI4]
 
     # uris = [URI1] #, URI2]
-    uris = [URI1, URI2]
+    uris = [URI1, URI2, URI3]
     # uris = [URI3, URI4]
 
 
     # case = Cases.get_case(filename='cases.json', casename='CT_demo_1v')
-    case = Cases.get_case(filename='cases.json', casename='CT_demo_2v')
+    # case = Cases.get_case(filename='cases.json', casename='CT_demo_2v')
+    case = Cases.get_case(filename='cases.json', casename='CT_demo_3v')
 
-    vehicles_next_goal_list = [[ [0, 0.4,0.4], [1.0,0,0.4] , [0,-1.2,0.4], [-1.0,0,0.4]], # V0
-                               [ [0, 0.4,0.5],[-1, 0,0.5] , [0,-1.0,0.5], [ .9,0.2,0.5]], # V1
-                               [ [-2, 0 ,0.8], [0,2.5,0.8] , [0,-2.5,0.8], [ 2.5,0,0.8]], # V2
-                               [ [0, 2.5,0.8], [0,-2.5,0.8], [-2, 0 ,0.8], [ 2.5,0,0.8]],]# V3
+    vehicles_next_goal_list = [[ [0, 0.4,0.4], [1.0,0,0.6] , [0,-1.2,0.4], [-1.0,0,0.6]] , # V0
+                               [ [0, 0.4,0.5], [-1, 0,0.5] , [0,-1.0,0.5], [ .9,0.2,0.5]], # V1
+                               [ [-1,-0.8,0.4],[1,-0.8,0.6], [1, 0.8,0.4], [-1.0,0.8,0.6]],# V2
+                               [ [0, 1.5,0.8], [0,-1.5,0.8], [-1, 0 ,0.8], [ 1.5,0,0.8]],] # V3
     
     num_vehicles = len(case.vehicle_list)
     INIT_XYZS = np.array([vehicle.position for vehicle in case.vehicle_list])
@@ -155,13 +156,30 @@ def main():
                                                                         yawrate=heading)
                     swarm._vehicles[i].send_report()
                     TARGET_VELS[i]=vel_enu
+                    FLOW_VELS[i]=V_des
 
+                ##### Log the simulation ####################################
+                for i, vehicle in enumerate(vehicle_list):
+                    log.log(drone=i,
+                               timestamp=time.time()-sim_start_time,
+                               state= np.hstack([vehicle.position, vehicle.velocity,  np.zeros(14)]),
+                            #    state= np.hstack([swarm.tellos[i].get_position_enu(), swarm.tellos[i].get_velocity_enu(), swarm.tellos[i].get_quaternion(),  np.zeros(10)]),
+                            #    control=np.hstack([TARGET_VELS[i], FLOW_VELS[i], V_sum[i], 0., target_vehicle[0].position]),
+                            #    control=np.hstack([TARGET_VELS[i], FLOW_VELS[i], population[0].position, sink_position]),
+                               control=np.hstack([TARGET_VELS[i], FLOW_VELS[i], np.zeros(6)]),
+                               sim=False
+                               # control=np.hstack([TARGET_VEL[j, wp_counters[j], 0:3], np.zeros(9)])
+                               )
+
+        #### Save the simulation results ###########################
+        log.save(flight_type='crazyTown')
 
         print('Finished flying...')
         swarm.land()
         swarm.close()
 
     except KeyboardInterrupt:
+        log.save(flight_type='crazyTown')
         swarm.land()
         swarm.close()
 

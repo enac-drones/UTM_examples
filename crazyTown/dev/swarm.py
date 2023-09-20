@@ -19,7 +19,14 @@ class Vehicle():
         self._uri = uri
         self._position = np.zeros(3)
         self._velocity = np.zeros(3)
+        self.ref_vel_enu = np.zeros(3)
+        self.ref_heading = 0.0
         self._battery = 0.0
+        self._takeoff_pos = np.zeros(3)
+        self._landing_pos = np.zeros(3)
+        self._vehicle_state = 0
+        self._state_duration = 0.0
+        self._hover_height = 0.4
         self._cf = Crazyflie(rw_cache='./cache')
 
         # Connect some callbacks from the Crazyflie API
@@ -37,6 +44,27 @@ class Vehicle():
 
         # Variable used to keep main loop occupied until disconnect
         self.is_connected = True
+
+    def fly(self):
+        # According to Vehicle_state , do different things
+        match self._vehicle_state:
+            case 0: #Takeoff
+                self._cf.high_level_commander.takeoff(0.4, 1.5)
+                self.check_state_duration(1.5, 1)
+            case 1: #Hover
+                self._cf.high_level_commander.go_to(self._takeoff_pos[0], self._takeoff_pos[1], self._takeoff_pos[2]+ self._hover_height, 0, 0.1)
+                self.check_state_duration(1, 2)
+            case 2: #Guidance with Velocity Setpoint
+                self._cf.commander.send_velocity_world_setpoint( self.ref_vel_enu[0],
+                                                                self.ref_vel_enu[1],
+                                                                self.ref_vel_enu[2],
+                                                                yawrate=self.ref_heading)
+
+    def check_state_duration(self, duration_s, new_state):
+        self._state_duration += 0.1
+        if self._state_duration > duration_s:
+            self._vehicle_state = new_state
+            self._state_duration = 0.0
 
     @property
     def position(self):
@@ -221,15 +249,30 @@ class Swarm():
     def __init__(self,uris:list, report_socket=None) -> None:
         self._uris = uris
         self._vehicles = [Vehicle(uri, report_socket=report_socket) for uri in uris]
+        self._state = 0
         for vehicle in self._vehicles:
             # vehicle._cf.open_link()
             time.sleep(0.1)
-        
+    
+    @property
+    def state(self): # FIX ME , this is hardcodded :(
+        self._state = 5 if np.all([vehicle._vehicle_state == 5 for vehicle in self._vehicles]) else 0
+        return self._state
+    
+    @state.setter
+    def state(self, value):
+        self._state = value
+
     def take_off(self):
         for vehicle in self._vehicles:
             vehicle._cf.high_level_commander.takeoff(0.4, 1.5)
         time.sleep(1.5)
     
+    def fly(self):
+        for vehicle in self._vehicles:
+            vehicle.fly()
+        
+
     def land(self):
         landing_duration = 3.0
         for vehicle in self._vehicles:
