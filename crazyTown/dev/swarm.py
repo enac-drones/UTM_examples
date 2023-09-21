@@ -27,6 +27,7 @@ class Vehicle():
         self._vehicle_state = 0
         self._state_duration = 0.0
         self._hover_height = 0.4
+        self._descent_height = 0.15
         self._cf = Crazyflie(rw_cache='./cache')
 
         # Connect some callbacks from the Crazyflie API
@@ -59,6 +60,13 @@ class Vehicle():
                                                                 self.ref_vel_enu[1],
                                                                 self.ref_vel_enu[2],
                                                                 yawrate=self.ref_heading)
+            case 4: #Descend
+                self._cf.high_level_commander.go_to(self._landing_pos[0], self._landing_pos[1], self._landing_pos[2]+ self._descent_height, 0, 0.1)
+                self.check_state_duration(1.5, 5) # Change to 5 after 1.5 secs
+                print('Landing')
+            case 5: #Land
+                print('Landing')
+                pass
 
     def check_state_duration(self, duration_s, new_state):
         self._state_duration += 0.1
