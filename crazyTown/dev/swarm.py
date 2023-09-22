@@ -3,6 +3,7 @@ import sys
 import time
 from threading import Event
 import numpy as np
+from enum import IntEnum
 
 import cflib.crtp
 from cflib.crazyflie import Crazyflie
@@ -13,6 +14,13 @@ from cflib.utils import uri_helper
 
 import zmq
 
+class VehicleState(IntEnum):
+    GROUNDED = 0
+    STARTED_TAKE_OFF = 1
+    INFLIGHT = 2
+    STARTED_LANDING = 3
+    FINISHED_LANDING = 4 
+    
 class Vehicle():
     def __init__(self,uri:str, report_socket=None) -> None:
         self.report_socket=report_socket
