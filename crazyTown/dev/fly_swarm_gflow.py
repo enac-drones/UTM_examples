@@ -55,8 +55,8 @@ def main():
     # case = Cases.get_case(filename='cases.json', casename='CT_demo_2v')
     case = Cases.get_case(filename='cases.json', casename='CT_demo_3v')
 
-    vehicles_next_goal_list = [[ [0, 0.4,0.4], [1.0,0,0.6] , [0,-1.2,0.4], [-1.0,0,0.6]] , # V0
-                               [ [0, 0.4,0.5], [-1, 0,0.5] , [0,-1.0,0.5], [ .9,0.2,0.5]], # V1
+    vehicles_next_goal_list = [[ [0, 0.4,0.4], [1.0,0,0.6] , [0,-1.2,0.4], [-1.0,0.2,0.6]] , # V0
+                               [ [0, 0.5,0.6], [-1, 0,0.5] , [0,-1.0,0.5], [ .9,0.2,0.5]], # V1
                                [ [-1,-0.8,0.4],[1,-0.8,0.6], [1, 0.8,0.4], [-1.0,0.8,0.6]],# V2
                                [ [0, 1.5,0.8], [0,-1.5,0.8], [-1, 0 ,0.8], [ 1.5,0,0.8]],] # V3
     
@@ -137,7 +137,7 @@ def main():
                     # V_des_unit[2] = 0.
                     mag = np.clip(mag, 0., 0.25)
                     vel_enu = V_des_unit*mag
-                    vel_enu[2] = V_des[2]*0.5
+                    vel_enu[2] = V_des[2]*0.45
                     # vel_enu[2] = 0. 
                     # print('Vel enu : ',vel_enu)
 
