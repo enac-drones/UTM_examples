@@ -7,6 +7,7 @@ import numpy as np
 import cflib.crtp
 from cflib.utils import uri_helper
 from swarm import Swarm
+from guidance import Guidance
 
 # class Flight_plan():
 #     def __init__(self) -> None:
@@ -39,6 +40,8 @@ def calculate_mid_waypoint(vehicle):
     p_mid = p_mid + np.matmul(e, unit_vec_ab) * 0.5
     return np.array([p_mid[0], p_mid[1], vehicle._landing_pos[2]])
 
+
+
 if __name__ == '__main__':
     # Initialize the low-level drivers
     cflib.crtp.init_drivers()
@@ -52,21 +55,30 @@ if __name__ == '__main__':
     duration_s = 3.
 
     # takeoff_pos = swarm._vehicles[0].position.copy()
-    destination = np.array([0.1, 0.1, 0.4])
+    destination = np.array([0.5, 0.5, 0.4])
 
 
     swarm._vehicles[0]._takeoff_pos = swarm._vehicles[0].position.copy()
     swarm._vehicles[0]._landing_pos = destination
     mid_point = calculate_mid_waypoint(swarm._vehicles[0])
-    print(f'TakeOff {swarm._vehicles[0]._takeoff_pos}, Mid Point: {mid_point} Landing {swarm._vehicles[0]._landing_pos}')
 
+    print(f'TakeOff {swarm._vehicles[0]._takeoff_pos}, Mid Point: {mid_point} Landing {swarm._vehicles[0]._landing_pos}')
+    
+    # traj = np.array([swarm._vehicles[0]._takeoff_pos, mid_point, swarm._vehicles[0]._landing_pos])
+    traj = np.array([swarm._vehicles[0]._takeoff_pos, np.array([0.5, -0.5, 0.4]), swarm._vehicles[0]._landing_pos])
+    guide = Guidance(trajectory=traj)
+    guide.waypoint_reached_distance = 0.1
+    guide.flight_altitude = 0.4
+    print(traj)
     try:
         while swarm.state != 5: # Change this to enums with "LANDED"
             swarm.fly()
             for vehicle in swarm._vehicles:
                 if vehicle._vehicle_state == 2: # Change this to enums with "CRUISE or ...."
 
-                    vehicle.ref_vel_enu = calculate_velocity(vehicle, towards_point=None)
+                    # vehicle.ref_vel_enu = calculate_velocity(vehicle, towards_point=None)
+                    vehicle.ref_vel_enu = guide.calculate_velocity_vector(vehicle.position) * 0.6
+                    # print(vehicle.ref_vel_enu)
 
 
                     if np.linalg.norm(vehicle._landing_pos - vehicle.position) < 0.1:
