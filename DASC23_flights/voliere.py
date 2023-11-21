@@ -325,7 +325,7 @@ def main():
     if args.ac is None:
         print("At least one pair of rigid body / AC id must be declared")
         exit()
-    print(args.ac[0][1])
+    # print(args.ac[0][1])
 
     vehicles = [Vehicle(ac_id[1]) for ac_id in args.ac]
     voliere = VolierePosition(args.ac, vehicles)
@@ -362,7 +362,7 @@ def main():
         voliere.run()
         sleep(1)
         while True:
-            # print(vehicles[0].position)
+            print(vehicles[0].position)
             # rpy=[0.,0.,0.]
             # p.getQuaternionFromEuler(rpy)
             p.resetBasePositionAndOrientation(vehicle,

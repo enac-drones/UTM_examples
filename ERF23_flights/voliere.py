@@ -182,11 +182,11 @@ class VolierePosition():
             # msg['course']
             # heading = 180. * np.arctan2(dcm_1_0, dcm_0_0) / 3.14
             heading = np.arctan2(dcm_1_0, dcm_0_0)
-            # print(msg['ac_id'], msg['enu_x'], msg['enu_y'], msg['enu_z'], heading)
+            print(msg['ac_id'], msg['enu_x'], msg['enu_y'], msg['enu_z'], heading)
             # print(quat)
             if self.vehicles != None:
                 for _v in self.vehicles:
-                    # print(_v.get_ac_id())
+                    print(_v.get_ac_id())
                     if _v.get_ac_id() == str(ac_id) : 
                         _v.set_position_enu(np.array([pos[0],pos[1],pos[2]]))
                         _v.set_velocity_enu(np.array([vel[0],vel[1],vel[2]]))
@@ -362,13 +362,13 @@ def main():
         voliere.run()
         sleep(1)
         while True:
-            # print(vehicles[0].position)
+            print(vehicles[0].position)
             # rpy=[0.,0.,0.]
             # p.getQuaternionFromEuler(rpy)
-            p.resetBasePositionAndOrientation(vehicle,
-                                            vehicles[0].position,
-                                            vehicles[0].quat,
-                                            physicsClientId=physicsClient)
+            # p.resetBasePositionAndOrientation(vehicle,
+            #                                 vehicles[0].position,
+            #                                 vehicles[0].quat,
+            #                                 physicsClientId=physicsClient)
             print(voliere.get_markerset_pos())
 
             sleep(0.01)
@@ -376,7 +376,7 @@ def main():
     except (KeyboardInterrupt, SystemExit):
         print("Shutting down natnet interfaces...")
         voliere.stop()
-        p.disconnect(physicsClientId=physicsClient)
+        # p.disconnect(physicsClientId=physicsClient)
         # ivy.shutdown()
     except OSError:
         print("Natnet connection error")

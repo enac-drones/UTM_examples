@@ -5,14 +5,24 @@ from voliere import VolierePosition
 from voliere import Vehicle as Target
 import pdb
 import numpy as np
+import sys
+
+
 
 # from path_plan_w_panel import ArenaMap, Vehicle, Flow_Velocity_Calculation_0
+sys.path.append('/Users/adriandelser/Desktop/ENAC/gflow')
+from src.arena import ArenaMap
+from src.panel_flow import Flow_Velocity_Calculation
+from src.building import Building
+from src.vehicle import Vehicle
+from src.cases import Cases
 
-from gflow.arena import ArenaMap
-from gflow.panel_flow import Flow_Velocity_Calculation
-# from gflow.building import Building
-from gflow.vehicle import Vehicle
-from gflow.cases import Cases
+
+# from gflow.arena import ArenaMap
+# from gflow.panel_flow import Flow_Velocity_Calculation
+# # from gflow.building import Building
+# from gflow.vehicle import Vehicle
+# from gflow.cases import Cases
 
 # from source import Source
 
