@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "utm-examples"
+version = "0.1.0"
+description = ""
+authors = ["Adrian del Ser <adrian.delser@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+djitellopy = {path = "/Users/adriandelser/Desktop/ENAC/DJITelloPy"}
+scenebuilder = {path = "/Users/adriandelser/Desktop/ENAC/scenebuilder"}
+gflow = {path = "/Users/adriandelser/Desktop/ENAC/gflow"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

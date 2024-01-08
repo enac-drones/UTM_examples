@@ -1,3 +1,4 @@
+
 from gflow.vehicle import Vehicle
 from gflow.cases import Case
 from typing import List
@@ -52,17 +53,19 @@ def initialise_voliere(swarm,AC_ID_LIST):
 
 
 
-def step_simulation(swarm, case_vehicle_list: List[Vehicle], max_avoidance_distance=20):
+def step_simulation(swarm, case:Case):
+
+    case_vehicle_list = case.vehicle_list
+    max_avoidance_distance = case.max_avoidance_distance
     """'Step the simulation by one timstep, list_of_vehicles is case.vehicle_list"""
     for idx, vehicle in enumerate(case_vehicle_list):
         # if the current vehicle has arrived, do nothing, continue looking at the other vehicles
         if vehicle.state == 1:
-            continue
             if not vehicle.has_landed:
                 # Perform the landing sequence once
                 time.sleep(0.5)
                 print("landing")
-                swarm.tellos[idx].move_down(40)
+                # swarm.tellos[idx].move_down(40)
                 swarm.tellos[idx].land()
                 vehicle.has_landed = True
                 pass
@@ -77,6 +80,8 @@ def step_simulation(swarm, case_vehicle_list: List[Vehicle], max_avoidance_dista
         # not too far, have not arrived yet, and are transmitting.
        
         vehicle.update_personal_vehicle_dict(case_vehicle_list,max_avoidance_distance)
+        vehicle.update_nearby_buildings(threshold = case.building_detection_threshold) #meters
+
 
         vehicle.run_simple_sim()
 
@@ -122,12 +127,13 @@ def run_real_case(
     # arrived = set()
     # case_vehicle_list = case.vehicle_list
     start_time = time.time()
+    
     while time.time()-start_time < t:
         # Step the simulation
         # step_simulation(case.vehicle_list,max_avoidance_distance)
 
         # this is faster than step_simulation, it avoids personal vehicle lists
-        step_simulation(swarm, case.vehicle_list, max_avoidance_distance)
+        step_simulation(swarm, case)
 
         if case.colliding():
             # a collision has been detected, do whatever you want

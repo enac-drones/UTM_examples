@@ -21,8 +21,8 @@ NEXT_GOAL_LIST:list = [[ [0,0,0.5], [2,2,0.5], [3,2,0.5]],
 
 
 #---------- OpTr- ACID - -----IP------
-AC_LIST:list = [#['68', '68', '192.168.1.68'],
-                ['69', '69', '192.168.1.69']]
+AC_LIST:list = [['68', '68', '192.168.1.68']]
+                # ['69', '69', '192.168.1.69']]
 # AC_LIST:list = [['65', '65', '192.168.1.65'],
 #             ['66', '66', '192.168.1.66']]
 AC_ID_LIST:list = [[_[0], _[1]] for _ in AC_LIST]
@@ -52,14 +52,22 @@ class CaseMaker(Observer):
 
     def call(self, event:str, case:Case):
         print("Called!")
+        print(f"{case.vehicle_list=}, {case.buildings =}")
         if event != "generate_case":
             raise NotImplementedError
         if len(case.vehicle_list) != len(AC_LIST):
             print("Number of vehicles does not match!")
             return
 
-        set_new_attribute(case, "source_strength", new_attribute_value=1)
+        # set_new_attribute(case, "source_strength", new_attribute_value=1)
         set_new_attribute(case, "sink_strength", new_attribute_value=5)
+        set_new_attribute(case, "max_speed", new_attribute_value=0.5)
+        set_new_attribute(case, "imag_source_strength", new_attribute_value=5)
+        set_new_attribute(case, "source_strength", new_attribute_value=2)
+        set_new_attribute(case, "dynamics_type", new_attribute_value="radius")
+        set_new_attribute(case, "turn_radius", new_attribute_value=0)
+        case.building_detection_threshold = 10
+        # set_new_attribute(case, "")
 
         self.fly(case)
     
@@ -88,8 +96,14 @@ class CaseMaker(Observer):
         print(f"initial positions are {INIT_XYZS}")
 
 
+        # for i in range(1000):
+        #     print(swarm.tellos[0].get_position_enu())
+        #     time.sleep(0.1)
+        # sys.exit()
+
         try:
             #takeoff everyone
+            print(swarm.tellos[0].get_position_enu())
             swarm.takeoff()
             time.sleep(2)
             # for i in range(50):
@@ -107,11 +121,14 @@ class CaseMaker(Observer):
             result = run_real_case(case=case,swarm=swarm,t = 500,update_every=1,stop_at_collision=True,max_avoidance_distance=20)
 
 
-            swarm.move_down(int(40))
+            # swarm.move_down(int(40))
             swarm.land()
             voliere.stop()
             swarm.end()
             time.sleep(1)
+
+        # except KeyboardInterrupt:
+        #     sys.exit()
 
         except (KeyboardInterrupt, SystemExit):
             print("Shutting down natnet interfaces...")
@@ -140,57 +157,9 @@ class CaseMaker(Observer):
 
 
 
-        # result = run_simulation(
-        #     case,
-        #     t=2000,
-        #     update_every=update_time_period,
-        #     stop_at_collision=False,
-        #     max_avoidance_distance=case.max_avoidance_distance,
-        # )
-        # print(result)
-
 
 if __name__ == "__main__":
-    # file_name = "examples/gui_testing_1.json"
-    # case_name="voliere"
-    # case = Cases.get_case(filename="bug_fixing/performance_enhancement.json", case_name="8_drones_2_buildings")
-    # case = Cases.get_case(filename="bug_fixing/cases.json", case_name="ignore_arrived")
-    # case = Cases.get_case(filename=file_name, case_name=case_name)
     case_maker = CaseMaker()
     case_maker.show()
-    # case = Cases.get_case(filename="gui_testing.json", case_name="my_case")
-
-    # sys.exit()
-    # case = Cases.get_case(filename="bug_fixing/cases.json", case_name="close_to_sink")
-    # set_new_attribute(case, "source_strength", new_attribute_value=1)
-    # set_new_attribute(case, "sink_strength", new_attribute_value=5)
-    # set_new_attribute(case, "max_speed", new_attribute_value=1)
-    # set_new_attribute(case, "delta_t", new_attribute_value=1 / 50)
-
-    # set_new_attribute(case, "transmitting", new_attribute_value=True)
-
-
-    # delta_t = case.vehicle_list[0].delta_t
-    # update_frequency = 50  # Hz
-    # update_time_period = max(int(1 / (update_frequency * delta_t)), 1)
-
-    # ######################################
-    # # this variable controls how many time steps occur between every communication of position
-    # # update_time_period = 10
-    # ######################################
-
-    # print(f"update every = {update_time_period}")
-
-    # case.max_avoidance_distance = 10
-
-    # result = run_simulation(
-    #     case,
-    #     t=2000,
-    #     update_every=update_time_period,
-    #     stop_at_collision=False,
-    #     max_avoidance_distance=case.max_avoidance_distance,
-    # )
-
     
-
-# EOF
+#EOF

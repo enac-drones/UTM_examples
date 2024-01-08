@@ -54,9 +54,9 @@ import re
 from scipy.spatial import ConvexHull
 
 # For pybullet :
-import pybullet as p
+# import pybullet as p
 from time import sleep
-import pybullet_data
+# import pybullet_data
 import pdb
 import numpy as np
 
@@ -332,16 +332,16 @@ def main():
 
 
     #==============
-    physicsClient = p.connect(p.GUI)
+    # physicsClient = p.connect(p.GUI)
 
-    p.setAdditionalSearchPath(pybullet_data.getDataPath())
+    # p.setAdditionalSearchPath(pybullet_data.getDataPath())
 
-    p.setGravity(0, 0, -10)
-    planeId = p.loadURDF("plane.urdf")
-    textureId = p.loadTexture("checker_grid.jpg")
+    # p.setGravity(0, 0, -10)
+    # planeId = p.loadURDF("plane.urdf")
+    # textureId = p.loadTexture("checker_grid.jpg")
 
-    vehicleStartPos = [0, 0, 0]
-    vehicleStartOrientation = p.getQuaternionFromEuler([0, 0, 0])
+    # vehicleStartPos = [0, 0, 0]
+    # vehicleStartOrientation = p.getQuaternionFromEuler([0, 0, 0])
 
     # servo1Id = p.addUserDebugParameter("serv1", -1.5, 1.5, 0)
     # servo2Id = p.addUserDebugParameter("serv2", -1.5, 1.5, 0)
@@ -350,7 +350,7 @@ def main():
     #boxId = p.loadURDF("cartpole.urdf", cubeStartPos, cubeStartOrientation)
     #boxId = p.loadURDF("pole.urdf", cubeStartPos, cubeStartOrientation)
     # vehicle = p.loadURDF("hexarotor.urdf", vehicleStartPos, vehicleStartOrientation)
-    vehicle = p.loadURDF("cube.urdf", vehicleStartPos, vehicleStartOrientation)
+    # vehicle = p.loadURDF("cube.urdf", vehicleStartPos, vehicleStartOrientation)
     # p.resetDebugVisualizerCamera( cameraDistance=6.5, cameraYaw=0, cameraPitch=-40, cameraTargetPosition=[0.0, 0.0, 0.0])
     # v_Pos, v_cubeOrn = p.getBasePositionAndOrientation(vehicle)
     #==============
@@ -365,10 +365,10 @@ def main():
             print(vehicles[0].position)
             # rpy=[0.,0.,0.]
             # p.getQuaternionFromEuler(rpy)
-            p.resetBasePositionAndOrientation(vehicle,
-                                            vehicles[0].position,
-                                            vehicles[0].quat,
-                                            physicsClientId=physicsClient)
+            # p.resetBasePositionAndOrientation(vehicle,
+            #                                 vehicles[0].position,
+            #                                 vehicles[0].quat,
+            #                                 physicsClientId=physicsClient)
             print(voliere.get_markerset_pos())
 
             sleep(0.01)
@@ -376,7 +376,7 @@ def main():
     except (KeyboardInterrupt, SystemExit):
         print("Shutting down natnet interfaces...")
         voliere.stop()
-        p.disconnect(physicsClientId=physicsClient)
+        # p.disconnect(physicsClientId=physicsClient)
         # ivy.shutdown()
     except OSError:
         print("Natnet connection error")
